@@ -1,19 +1,21 @@
 'use client';
 
 import React from 'react';
-import { Scissors, DollarSign, Camera, Plus, Sparkles } from 'lucide-react';
+import { Scissors, DollarSign, Camera, Plus, Sparkles, Mic } from 'lucide-react';
 import { Post } from '@/types/post';
 
 interface HeaderProps {
   posts: Post[];
   onNewPostClick: () => void;
   onSyncExtensionClick: () => void;
+  onVoiceIntakeClick: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   posts,
   onNewPostClick,
   onSyncExtensionClick,
+  onVoiceIntakeClick,
 }) => {
   const draftsCount = posts.filter(p => p.status === 'draft').length;
   const pendingCount = posts.filter(p => p.status === 'pending_review').length;
@@ -79,19 +81,27 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Actions */}
           <div className="flex items-center gap-2">
             <button
+              onClick={onVoiceIntakeClick}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-amber-500/20 to-amber-400/10 text-amber-300 border border-amber-500/40 hover:border-amber-400 transition-all shadow-sm"
+              title="Speak or Paste a List to Auto-Generate"
+            >
+              <Mic className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              <span>Voice / AI Sorter</span>
+            </button>
+            <button
               onClick={onSyncExtensionClick}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition-colors"
               title="Sync with Chrome Extension Storage"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Sync Extension</span>
+              <span className="hidden sm:inline">Sync Ext</span>
             </button>
             <button
               onClick={onNewPostClick}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-amber-500 hover:bg-amber-400 text-zinc-950 transition-colors font-semibold"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>New Look</span>
+              <span className="hidden sm:inline">Manual</span>
             </button>
           </div>
         </div>

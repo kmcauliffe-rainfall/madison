@@ -7,6 +7,7 @@ import { PostCard } from '@/components/PostCard';
 import { PostDetailModal } from '@/components/PostDetailModal';
 import { PublishModal } from '@/components/PublishModal';
 import { NewPostModal } from '@/components/NewPostModal';
+import { VoiceIntakeModal } from '@/components/VoiceIntakeModal';
 import {
   Filter,
   Search,
@@ -17,7 +18,9 @@ import {
   Layers,
   ArrowRight,
   RefreshCw,
-  FolderSync
+  FolderSync,
+  Mic,
+  Wand2
 } from 'lucide-react';
 
 export default function Home() {
@@ -28,6 +31,7 @@ export default function Home() {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [postToPublish, setPostToPublish] = useState<Post | null>(null);
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [syncNotice, setSyncNotice] = useState<string | null>(null);
 
   const fetchPosts = async () => {
@@ -101,6 +105,7 @@ export default function Home() {
         posts={posts}
         onNewPostClick={() => setIsNewModalOpen(true)}
         onSyncExtensionClick={handleSyncExtension}
+        onVoiceIntakeClick={() => setIsVoiceModalOpen(true)}
       />
 
       {/* Sync notification toast */}
@@ -112,6 +117,33 @@ export default function Home() {
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full flex flex-col gap-6">
+        {/* Fast Brain-Dump / Voice Hero Banner */}
+        <div className="bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 border border-amber-500/30 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 flex-shrink-0">
+              <Mic className="w-6 h-6 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-sm sm:text-base font-semibold text-zinc-100 flex items-center gap-2">
+                One-Click AI Intake: Voice Dictation & Brain-Dump
+                <span className="text-[10px] font-mono bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">
+                  Instant Auto-Sort
+                </span>
+              </h3>
+              <p className="text-xs text-zinc-400 mt-1 max-w-xl">
+                Don’t want to fill out forms? Tap the mic and describe the client, tailoring work, and stylists, or paste a raw list of past jobs. The AI extracts credits, generates clean captions, isolates Reels, and stages everything automatically.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsVoiceModalOpen(true)}
+            className="flex-shrink-0 px-5 py-2.5 rounded-xl font-semibold text-xs bg-amber-500 hover:bg-amber-400 text-zinc-950 transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95"
+          >
+            <Mic className="w-4 h-4" />
+            <span>Open Voice / List Intake</span>
+          </button>
+        </div>
+
         {/* Priority & Quality Control Alert Banner */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-4 flex items-start gap-3">
@@ -295,6 +327,13 @@ export default function Home() {
         isOpen={isNewModalOpen}
         onClose={() => setIsNewModalOpen(false)}
         onCreated={(newPost) => setPosts(prev => [newPost, ...prev])}
+      />
+
+      {/* Voice & Brain Dump AI Intake Modal */}
+      <VoiceIntakeModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+        onSuccess={(newPosts) => setPosts(prev => [...newPosts, ...prev])}
       />
     </div>
   );
