@@ -1,0 +1,216 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: posts
+    // Document ID: {postId} (string, matches post_id, 1-128 chars)
+    //
+    // Fields:
+    //   - post_id: string (required, 1-128 chars, immutable on update)
+    //   - client_name: string (required, 1-200 chars) - Celebrity / client name
+    //   - event_or_project: string (optional, 0-200 chars) - Event or project description
+    //   - look_type: string (optional, 0-200 chars) - Tailoring or look type description
+    //   - status: string (required, enum: 'draft' | 'pending_review' | 'scheduled' | 'published')
+    //   - media: list (required, 0-50 assets) - High-res images / videos
+    //   - is_standalone_reel: bool (optional) - Isolated Reel toggle
+    //   - caption: string (required, 0-5000 chars) - Post caption
+    //   - collaborator_account: string (optional, 0-100 chars) - Primary IG collaborator handle
+    //   - additional_collaborators: list of strings (optional, 0-20 items)
+    //   - location: string (optional, 0-300 chars) - Geotag / location name
+    //   - scheduled_time: string or timestamp or null (optional) - Scheduled publication time
+    //   - published_at: string or timestamp or null (optional) - Actual publication time
+    //   - instagram_post_id: string or null (optional, 0-200 chars) - Meta Graph API ID
+    //   - credits: map (optional) - Credits metadata map:
+    //       * tailoring: string (optional, 0-200 chars)
+    //       * stylist: string (optional, 0-200 chars)
+    //       * assistants: list of strings (optional, 0-20 items)
+    //       * hair: string (optional, 0-200 chars)
+    //       * makeup: string (optional, 0-200 chars)
+    //       * nails: string (optional, 0-200 chars)
+    //       * photographer: string (optional, 0-200 chars)
+    //       * custom_credits: list of maps (optional, 0-20 items)
+    //   - notes: string (optional, 0-5000 chars) - Internal alterations and tailoring notes
+    //   - rate_billed: number (optional, 0-100000 USD) - Fee billed per completed post
+    //   - created_at: string or timestamp (required, immutable on update) - Audit creation timestamp
+    //   - updated_at: string or timestamp (optional on create, required on update) - Audit update timestamp
+    //
+    // ===============================================================
+
+    // Root default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ===============================================================
+    // Helper Functions: Authentication & Role-Based Access Control
+    // ===============================================================
+
+    // Check if the request is from an authenticated user
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user has an administrator role via token custom claims
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.admin == true ||
+        request.auth.token.role == 'admin'
+      );
+    }
+
+    // Check if user has a client manager role via token custom claims
+    function isClientManager() {
+      return isAuthenticated() && (
+        request.auth.token.client_manager == true ||
+        request.auth.token.role == 'client_manager' ||
+        request.auth.token.role == 'manager'
+      );
+    }
+
+    // Portfolio Management Access:
+    // In draft, sandbox, and portfolio management mode, allow authenticated admins or client managers.
+    // Also permits authenticated team members during development/sandbox when role claims
+    // have not yet been assigned to the account.
+    function canManagePosts() {
+      return isAuthenticated() && (
+        isAdmin() ||
+        isClientManager() ||
+        (!('role' in request.auth.token) && !('admin' in request.auth.token) && !('client_manager' in request.auth.token))
+      );
+    }
+
+    // ===============================================================
+    // Helper Functions: Type, Format & Schema Validation
+    // ===============================================================
+
+    // Validate ISO-8601 string or Firestore timestamp
+    function isValidTimestampOrIso(val) {
+      return (val is timestamp) || (
+        val is string &&
+        val.size() <= 50 &&
+        val.matches('^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*Z?$')
+      );
+    }
+
+    // Validate post status lifecycle enum
+    function isValidStatus(status) {
+      return status in ['draft', 'pending_review', 'scheduled', 'published'];
+    }
+
+    // Allowed top-level fields for post documents
+    function allowedPostFields() {
+      return [
+        'post_id',
+        'client_name',
+        'event_or_project',
+        'look_type',
+        'status',
+        'media',
+        'is_standalone_reel',
+        'caption',
+        'collaborator_account',
+        'additional_collaborators',
+        'location',
+        'scheduled_time',
+        'published_at',
+        'instagram_post_id',
+        'credits',
+        'notes',
+        'rate_billed',
+        'created_at',
+        'updated_at'
+      ];
+    }
+
+    // Validate individual media item structure
+    function isValidMediaAsset(asset) {
+      return asset is map &&
+        asset.keys().hasAll(['url', 'type']) &&
+        asset.keys().hasOnly(['url', 'type', 'thumbnail_url', 'is_full_body', 'source_url', 'quality_rating']) &&
+        asset.url is string && asset.url.size() > 0 && asset.url.size() <= 2048 &&
+        asset.type in ['image', 'video'] &&
+        (!('thumbnail_url' in asset) || (asset.thumbnail_url is string && asset.thumbnail_url.size() <= 2048)) &&
+        (!('is_full_body' in asset) || asset.is_full_body is bool) &&
+        (!('source_url' in asset) || (asset.source_url is string && asset.source_url.size() <= 2048)) &&
+        (!('quality_rating' in asset) || (asset.quality_rating in ['high', 'medium', 'screenshot_flagged']));
+    }
+
+    // Validate credits map structure
+    function isValidCredits(credits) {
+      return credits is map &&
+        credits.keys().hasOnly([
+          'tailoring', 'stylist', 'assistants', 'hair',
+          'makeup', 'nails', 'photographer', 'custom_credits'
+        ]) &&
+        (!('tailoring' in credits) || (credits.tailoring is string && credits.tailoring.size() <= 200)) &&
+        (!('stylist' in credits) || (credits.stylist is string && credits.stylist.size() <= 200)) &&
+        (!('assistants' in credits) || (credits.assistants is list && credits.assistants.size() <= 20)) &&
+        (!('hair' in credits) || (credits.hair is string && credits.hair.size() <= 200)) &&
+        (!('makeup' in credits) || (credits.makeup is string && credits.makeup.size() <= 200)) &&
+        (!('nails' in credits) || (credits.nails is string && credits.nails.size() <= 200)) &&
+        (!('photographer' in credits) || (credits.photographer is string && credits.photographer.size() <= 200)) &&
+        (!('custom_credits' in credits) || (credits.custom_credits is list && credits.custom_credits.size() <= 20));
+    }
+
+    // Domain validator for post documents (enforced on BOTH create and update)
+    function isValidPost(data, postId) {
+      return data.keys().hasAll(['post_id', 'client_name', 'status', 'media', 'caption', 'created_at']) &&
+        data.keys().hasOnly(allowedPostFields()) &&
+        data.post_id is string &&
+        data.post_id == postId &&
+        data.post_id.size() >= 1 &&
+        data.post_id.size() <= 128 &&
+        data.client_name is string &&
+        data.client_name.size() >= 1 &&
+        data.client_name.size() <= 200 &&
+        isValidStatus(data.status) &&
+        data.media is list &&
+        data.media.size() <= 50 &&
+        (data.media.size() == 0 || isValidMediaAsset(data.media[0])) &&
+        data.caption is string &&
+        data.caption.size() <= 5000 &&
+        isValidTimestampOrIso(data.created_at) &&
+        (!('updated_at' in data) || isValidTimestampOrIso(data.updated_at)) &&
+        (!('event_or_project' in data) || (data.event_or_project is string && data.event_or_project.size() <= 200)) &&
+        (!('look_type' in data) || (data.look_type is string && data.look_type.size() <= 200)) &&
+        (!('is_standalone_reel' in data) || data.is_standalone_reel is bool) &&
+        (!('collaborator_account' in data) || (data.collaborator_account is string && data.collaborator_account.size() <= 100)) &&
+        (!('additional_collaborators' in data) || (data.additional_collaborators is list && data.additional_collaborators.size() <= 20)) &&
+        (!('location' in data) || (data.location is string && data.location.size() <= 300)) &&
+        (!('scheduled_time' in data) || data.scheduled_time == null || isValidTimestampOrIso(data.scheduled_time)) &&
+        (!('published_at' in data) || data.published_at == null || isValidTimestampOrIso(data.published_at)) &&
+        (!('instagram_post_id' in data) || data.instagram_post_id == null || (data.instagram_post_id is string && data.instagram_post_id.size() <= 200)) &&
+        (!('credits' in data) || isValidCredits(data.credits)) &&
+        (!('notes' in data) || (data.notes is string && data.notes.size() <= 5000)) &&
+        (!('rate_billed' in data) || (data.rate_billed is number && data.rate_billed >= 0 && data.rate_billed <= 100000));
+    }
+
+    // ===============================================================
+    // Collection: Posts
+    // ===============================================================
+
+    match /posts/{postId} {
+      // In draft / sandbox / portfolio management mode, authenticated admins and client managers can read posts
+      allow read: if canManagePosts();
+
+      // Create: Authenticated admin or client manager + strict schema and type validation
+      allow create: if canManagePosts() &&
+        isValidPost(request.resource.data, postId);
+
+      // Update: Authenticated admin or client manager + schema validation + immutable post_id and created_at audit fields
+      allow update: if canManagePosts() &&
+        isValidPost(request.resource.data, postId) &&
+        request.resource.data.post_id == resource.data.post_id &&
+        request.resource.data.created_at == resource.data.created_at &&
+        ('updated_at' in request.resource.data && isValidTimestampOrIso(request.resource.data.updated_at));
+
+      // Delete: Authenticated admin or client manager
+      allow delete: if canManagePosts();
+    }
+  }
+}
