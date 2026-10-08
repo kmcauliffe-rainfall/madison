@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Scissors, DollarSign, Camera, Plus, Sparkles, Mic } from 'lucide-react';
+import { Scissors, DollarSign, Camera, Plus, Sparkles, Mic, Link2 } from 'lucide-react';
 import { Post } from '@/types/post';
 
 interface HeaderProps {
@@ -9,6 +9,7 @@ interface HeaderProps {
   onNewPostClick: () => void;
   onSyncExtensionClick: () => void;
   onVoiceIntakeClick: () => void;
+  onPasteLinkClick?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   onNewPostClick,
   onSyncExtensionClick,
   onVoiceIntakeClick,
+  onPasteLinkClick,
 }) => {
   const draftsCount = posts.filter(p => p.status === 'draft').length;
   const pendingCount = posts.filter(p => p.status === 'pending_review').length;
@@ -39,9 +41,13 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="text-[10px] font-medium tracking-wide uppercase px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
                 Hollywood Client Suite
               </span>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-800/80">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                @flower.thief API Live
+              </span>
             </div>
             <p className="text-xs text-zinc-400">
-              Portfolio & Social Workflow • Primary Handle: <span className="text-amber-400 font-mono">@flowerthief</span>
+              Portfolio & Social Workflow • Primary Handle: <span className="text-amber-400 font-mono">@flower.thief</span>
             </p>
           </div>
         </div>
@@ -80,6 +86,16 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            {onPasteLinkClick && (
+              <button
+                onClick={onPasteLinkClick}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-amber-300 border border-amber-500/30 transition-colors shadow-sm"
+                title="Paste an Instagram Link to Auto-Download/Import"
+              >
+                <Link2 className="w-3.5 h-3.5 text-amber-400" />
+                <span>Paste Link</span>
+              </button>
+            )}
             <button
               onClick={onVoiceIntakeClick}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-amber-500/20 to-amber-400/10 text-amber-300 border border-amber-500/40 hover:border-amber-400 transition-all shadow-sm"

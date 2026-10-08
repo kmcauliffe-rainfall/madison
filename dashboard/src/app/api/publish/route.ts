@@ -23,13 +23,13 @@ export async function POST(req: NextRequest) {
     }
 
     const businessAccountId = process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID;
-    const accessToken = process.env.META_USER_ACCESS_TOKEN;
+    const accessToken = process.env.META_SYSTEM_USER_TOKEN || process.env.META_USER_ACCESS_TOKEN;
 
     const isLiveConfigured = Boolean(
       businessAccountId &&
-      businessAccountId !== 'your_ig_business_id' &&
       accessToken &&
-      accessToken !== 'your_long_lived_token'
+      !businessAccountId.includes('your_') &&
+      !accessToken.includes('your_')
     );
 
     const logs: PublishStepLog[] = [];
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
     }
 
     // LIVE META GRAPH API EXECUTION
-    const GRAPH_URL = 'https://graph.facebook.com/v20.0';
+    const GRAPH_URL = 'https://graph.facebook.com/v26.0';
 
     if (isReel) {
       const videoAsset = post.media.find(m => m.type === 'video') || post.media[0];

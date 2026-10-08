@@ -8,6 +8,7 @@ import { PostDetailModal } from '@/components/PostDetailModal';
 import { PublishModal } from '@/components/PublishModal';
 import { NewPostModal } from '@/components/NewPostModal';
 import { VoiceIntakeModal } from '@/components/VoiceIntakeModal';
+import { PasteLinkModal } from '@/components/PasteLinkModal';
 import {
   Filter,
   Search,
@@ -32,6 +33,7 @@ export default function Home() {
   const [postToPublish, setPostToPublish] = useState<Post | null>(null);
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [isPasteLinkModalOpen, setIsPasteLinkModalOpen] = useState(false);
   const [syncNotice, setSyncNotice] = useState<string | null>(null);
 
   const fetchPosts = async () => {
@@ -106,6 +108,7 @@ export default function Home() {
         onNewPostClick={() => setIsNewModalOpen(true)}
         onSyncExtensionClick={handleSyncExtension}
         onVoiceIntakeClick={() => setIsVoiceModalOpen(true)}
+        onPasteLinkClick={() => setIsPasteLinkModalOpen(true)}
       />
 
       {/* Sync notification toast */}
@@ -334,6 +337,13 @@ export default function Home() {
         isOpen={isVoiceModalOpen}
         onClose={() => setIsVoiceModalOpen(false)}
         onSuccess={(newPosts) => setPosts(prev => [...newPosts, ...prev])}
+      />
+
+      {/* Paste Instagram Link Downloader Modal */}
+      <PasteLinkModal
+        isOpen={isPasteLinkModalOpen}
+        onClose={() => setIsPasteLinkModalOpen(false)}
+        onPostCreated={(newPost) => setPosts(prev => [newPost, ...prev])}
       />
     </div>
   );
