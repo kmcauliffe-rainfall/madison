@@ -1,0 +1,78 @@
+Social Media Management Workflow
+October 02, 2026
+
+Overview
+
+Madison and Kyle discussed establishing a workflow for managing Madison's professional social media presence through content curation, scheduling, and administrative support.
+
+Content Workflow
+Madison outlined her current manual process for sourcing high-quality imagery from celebrity posts and stylist accounts like Chris Herron.
+*   Sourcing: Madison uses SnapInsta or similar tools to download carousels and videos from Instagram to avoid low-quality screenshots with UI overlays.
+*   Quality Control: She prioritizes full-body shots and high-resolution images from credible sources like W Magazine to showcase her tailoring work, such as hems on Chrome Hearts pants.
+*   Strategy: Madison prefers using the "collaborator" feature on Instagram to increase reach and plans to use Flower Thief as a collaborator on her business account.
+*   Optimization: She noted that Reels perform better than video carousels and intends to separate high-impact videos into standalone Reels.
+
+Business Operations
+The participants discussed transitioning repetitive tasks to Kyle to free up Madison's creative time for prototyping and high-level design.
+*   Compensation: They agreed on a rate of $20 per post for Kyle to handle research, formatting, and scheduling.
+*   Invoicing: Madison currently manages finances via QuickBooks, utilizing a net 30 payment structure and sending reminders to clients.
+*   Administrative Needs: Kyle will assist with creating mock posts, researching credits (styling, hair, makeup), and scheduling content during peak hours.
+*   Prioritization: Immediate focus will be on past projects including Bright Eyes at the Hollywood Bowl, work for Gabby, and upcoming releases for Music of Luna.
+
+Unresolved Items
+*   Can Kyle automate the content downloading and caption formatting process using AI?
+*   What is the most effective schedule for posting to maintain engagement without overwhelming the grid?
+*   How can the workflow be scaled if Madison decides to move toward an agency model?
+
+Action Items
+
+- Create and publish portfolio posts with accurate credits, starting with the Bright Eyes Hollywood Bowl project and prioritizing Gabby, Luna, and Chris Haran projects; target approximately two posts per week at $20 per post. (Kyle McAuliffe)
+- Publish the Pandora Knox content when the music video is released rather than posting the teasers in advance. (Kyle McAuliffe)
+- Investigate using AI or an app to automate the portfolio-posting workflow after manually learning and validating the process. (Kyle McAuliffe)
+- Provide the business Instagram account login so the posting work can begin.
+
+Outline
+
+Current Content Creation Workflow
+
+- Speaker 2 demonstrates her process of saving tailoring work from Instagram to a dedicated folder.
+- She uses a split-screen method with a browser and SnapInsta to download high-quality carousels and reels.
+- The goal is to secure full-body images that clearly showcase her specific tailoring work, such as hems or alterations.
+- Speaker 2 notes that video content and reels typically achieve better engagement than static photos.
+
+Social Media Strategy and Engagement
+
+- Speaker 2 utilizes the Instagram collaborator feature to increase reach across multiple accounts.
+- She prefers posting on her business account, Flower Thief, rather than her personal account to maintain professional boundaries.
+- The strategy involves archiving older posts from the main grid once they have served their purpose for engagement.
+- Speaker 2 emphasizes that her low follower count reflects her status as a "best kept secret" in the industry.
+
+Drafting Professional Post Captions
+
+- Speaker 2 shows how she uses notes to draft captions by copying credits from stylists like Chris Herron.
+- She prioritizes crediting the people she worked with directly, such as hair, makeup, and assistants.
+- The workflow includes cleaning up messy text to ensure a professional look for the final post.
+- Speaker 2 expresses a preference for high-quality, clean images without watermarks from sources like Getty Images.
+
+New Collaboration and Automation Goals
+
+- Speaker 1 suggests using AI to automate the tedious parts of the posting and scheduling process.
+- Speaker 2 wants to move away from manual tasks so she can focus on creative prototyping and design.
+- They discuss the potential for Speaker 1 to develop an app that streamlines these social media workflows.
+- Speaker 2 mentions working with a maker at Replicant Labs who uses large-scale 3D printing for custom props.
+
+Financial Management and Invoicing
+
+- Speaker 2 manages her business finances and invoicing through the QuickBooks app.
+- She uses a net 30 payment term and sends reminders to clients when payments become overdue.
+- The discussion covers her varying rates, including a flat day rate for high-profile clients like Charli XCX.
+- Speaker 2 explains her method of CCing her personal email to attach receipts to QuickBooks invoices.
+
+Projected Workload and Future Tasks
+
+- The pair agrees on a trial period where Speaker 1 will be paid $20 per post to manage the backlog.
+- Speaker 2 identifies priority projects, including work for Bright Eyes at the Hollywood Bowl and collaborations with Gabby.
+- Upcoming tasks include managing posts for Pandora Knox's music video release and Music of Luna content.
+- The meeting concludes with plans to coordinate via phone to finalize the initial batch of posts.
+
+Generated by https://otter.ai

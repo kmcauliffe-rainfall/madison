@@ -1,0 +1,29 @@
+{
+  "posts": {
+    "post_id": "string",
+    "client_name": "string",
+    "event_or_project": "string",
+    "status": "draft | pending_review | scheduled | published",
+    "media": [
+      {
+        "url": "string",
+        "type": "image | video",
+        "is_full_body": true,
+        "source_url": "string"
+      }
+    ],
+    "caption": "string",
+    "collaborator_account": "string",
+    "location": "string",
+    "scheduled_time": "ISO-8601 string",
+    "credits": {
+      "stylist": "string",
+      "assistants": ["string"],
+      "hair": "string",
+      "makeup": "string",
+      "nails": "string",
+      "photographer": "string"
+    },
+    "created_at": "timestamp"
+  }
+}
