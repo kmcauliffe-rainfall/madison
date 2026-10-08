@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TailorPortfolioPost",
+  "type": "object",
+  "required": [
+    "post_id",
+    "client_name",
+    "status",
+    "media",
+    "caption",
+    "created_at"
+  ],
+  "properties": {
+    "post_id": {
+      "type": "string",
+      "description": "Unique identifier for the post"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Celebrity, artist, or client name (e.g., Charli XCX, Bright Eyes, Music of Luna)"
+    },
+    "event_or_project": {
+      "type": "string",
+      "description": "Event, music video, or editorial project (e.g., VMAs, Hollywood Bowl, MV Shoot)"
+    },
+    "look_type": {
+      "type": "string",
+      "description": "Type of tailoring or styling work (e.g., Pant Hem, Custom Corset, Suit Alteration, Archival Fit)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "pending_review", "scheduled", "published"],
+      "default": "draft",
+      "description": "Workflow lifecycle state of the post"
+    },
+    "media": {
+      "type": "array",
+      "description": "Array of high-resolution images or videos extracted for the post",
+      "items": {
+        "type": "object",
+        "required": ["url", "type"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Direct URL to high-resolution asset"
+          },
+          "thumbnail_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["image", "video"]
+          },
+          "is_full_body": {
+            "type": "boolean",
+            "default": false,
+            "description": "Flag indicating if the image showcases the full-body outfit/tailoring"
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Original Instagram / Getty / stylist post URL"
+          },
+          "quality_rating": {
+            "type": "string",
+            "enum": ["high", "medium", "screenshot_flagged"],
+            "default": "high"
+          }
+        }
+      }
+    },
+    "is_standalone_reel": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether video media should be published as an isolated standalone Reel for higher reach"
+    },
+    "caption": {
+      "type": "string",
+      "description": "Clean, unembellished caption without fluff"
+    },
+    "collaborator_account": {
+      "type": "string",
+      "description": "Primary collaborator Instagram handle (e.g. @flowerthief or personal handle) for co-authoring"
+    },
+    "additional_collaborators": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Additional Instagram handles to invite as collaborators or tag"
+    },
+    "location": {
+      "type": "string",
+      "description": "Location tag (e.g., Hollywood Bowl, Los Angeles, CA)"
+    },
+    "scheduled_time": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "ISO-8601 scheduled publishing timestamp"
+    },
+    "published_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "instagram_post_id": {
+      "type": ["string", "null"],
+      "description": "Published post or media container ID from Meta Graph API"
+    },
+    "credits": {
+      "type": "object",
+      "properties": {
+        "tailoring": {
+          "type": "string",
+          "description": "Tailor / seamstress credit (e.g., @flowerthief)"
+        },
+        "stylist": {
+          "type": "string",
+          "description": "Stylist credit (e.g., @chrishoran20)"
+        },
+        "assistants": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Styling or tailoring assistants"
+        },
+        "hair": {
+          "type": "string",
+          "description": "Hair stylist handle or name"
+        },
+        "makeup": {
+          "type": "string",
+          "description": "Makeup artist handle or name"
+        },
+        "nails": {
+          "type": "string",
+          "description": "Nail artist handle or name"
+        },
+        "photographer": {
+          "type": "string",
+          "description": "Photographer handle or publication credit"
+        },
+        "custom_credits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": { "type": "string" },
+              "handle": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes (e.g. alterations made, hems, rate tracking)"
+    },
+    "rate_billed": {
+      "type": "number",
+      "default": 20,
+      "description": "Fee billed per completed post in USD"
+    },
+    "created_at": {
+      "type": "string",
+      "description": "ISO-8601 timestamp or Firestore server timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "ISO-8601 timestamp or Firestore server timestamp"
+    }
+  }
+}

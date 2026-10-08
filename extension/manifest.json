@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "TailorFlow - Portfolio & Credit Scraper",
+  "version": "1.0.0",
+  "description": "One-click capture for high-res media, credits, and look tagging for Hollywood tailoring & styling portfolios.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://*.instagram.com/*",
+    "https://*.gettyimages.com/*",
+    "http://localhost:*/*",
+    "https://*.firebaseio.com/*",
+    "https://firestore.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "TailorFlow: Capture Look & Credits"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.instagram.com/*",
+        "https://*.gettyimages.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

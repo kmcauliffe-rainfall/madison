@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect width="128" height="128" rx="28" fill="#0f172a"/>
+  <circle cx="64" cy="64" r="50" fill="#1e293b" stroke="#f59e0b" stroke-width="4"/>
+  <text x="64" y="80" font-size="52" text-anchor="middle" fill="#f59e0b" font-family="sans-serif">✂️</text>
+</svg>
